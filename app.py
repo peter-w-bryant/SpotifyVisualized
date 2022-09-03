@@ -59,6 +59,8 @@ def authorize():
     profile_info = sp.current_user()
     session["username"] = profile_info['display_name']
     session["profile_picture"] = profile_info['images'][0]['url']
+    msg = "You have successfully signed in as {}!".format(session.get('username'))
+    flash(msg, 'good-signin')
     return redirect(url_for('myaccount'))       # Redirect the user to the get tracks page
 
 
@@ -106,13 +108,11 @@ GET TRACKS: Endpoint for getting the user's saved tracks. This will get the user
 """
 @app.route('/myaccount')
 def myaccount():
-    msg = "You have successfully signed in as {}!".format(session.get('username'))
-    return render_template('myaccount.html', msg=msg)
+    return render_template('myaccount.html')
 
 
 @app.route('/mytracks')
 def mytracks():
-    msg = "You have successfully signed in with your Spotify credentials!"
     session['token_info'], token_authorized = get_token()                     # Get the token information from the session cookie by calling the get_token function below
     session.modified = True                                                   # Indicate that the session data has been modified
     if not token_authorized:                                                  # If the token is not valid

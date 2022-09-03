@@ -1,7 +1,18 @@
 {% extends 'layout.html' %}
-{% block head %}{% endblock %}
+
+{% block head %}
+{% endblock %}
 
 {% block body %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+        {% if category == 'good-signin' %}
+            <div class="alert alert-success" style="color:black; background-color:rgb(29,185,84);">{{message}}&nbsp;<i
+                        class="fa-regular fa-thumbs-up" style="color:black"></i></div>
+        {% endif %}
+    {% endfor %}
+{% endwith %}
 
 <div class="container">
     <div class="row" style="text-align:center">
@@ -14,7 +25,8 @@
                 Visualized.</p>
             <br>
             <hr style="width:100%;text-align:left;margin-left:0">
-            <h2 style="font-size:medium; color:rgb(29,185,84);"><b>Your account at a glimpse...&nbsp;</b><img src="static\images\greeneye.png" alt="" style="width:50px; height:auto"/></h2>
+            <h2 style="font-size:medium; color:rgb(29,185,84);"><b>Your account at a glimpse...&nbsp;</b><img
+                    src="static\images\greeneye.png" alt="" style="width:50px; height:auto" /></h2>
         </div>
     </div>
     <br><br>
