@@ -109,11 +109,44 @@ GET TRACKS: Endpoint for getting the user's saved tracks. This will get the user
 """
 @app.route('/myaccount')
 def myaccount():
-    scope = 'user-read-recently-played'
-    username = session.get('username')
-    # token = util.prompt_for_user_token(username, scope, client_id="9755ec99cb86450bb04ecd1a6547647a",  client_secret="620e0bc86c0846929c83d61ec1fd92df", redirect_uri=url_for('authorize', _external=True),)
-        
-    return render_template('myaccount.html')
+    session['token_info'], token_authorized = get_token()                     # Get the token information from the session cookie by calling the get_token function below
+    session.modified = True                                                   # Indicate that the session data has been modified
+    if not token_authorized:                                                  # If the token is not valid
+        return redirect('/')                                                  # Redirect the user to the index page
+    sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))  # Create a Spotify object using the access token stored in the session
+
+    # Get the user's 20 most recently played tracks
+    results = []
+    curGroup = sp.current_user_recently_played(limit=20)['items']             # Get the next 50 tracks
+    for idx, item in enumerate(curGroup):                                     # Iterate through the retrieved tracks (50 tracks total in curGroup)
+        track = item['track']                                                 # Get the track from the item
+        val = track['name'] + " - " + track['artists'][0]['name']             # Get the track name and artist name, format: "Track Name - Artist Name"
+        results += [val]                                                      # Add the track name and artist name formated values to the results list
+    df = pd.DataFrame(results, columns=["Song Name"])                         # Create a pandas dataframe with the results list
+    df_to_html = df.to_html(classes='data', header="true").replace('<th>','<th style = "color:white; text-align:center">')
+    recent_tracks_table = [df_to_html]                                        # Convert the dataframe to an HTML table
+
+    # Get the user's 10 top artists
+    results = []
+    curGroup = sp.current_user_top_artists(limit=10)['items']                 # Get the next 50 tracks
+    for idx, item in enumerate(curGroup):                                     # Iterate through the retrieved tracks (50 tracks total in curGroup)
+        artist = item['name']                                                 # Get the track from the item
+        results += [artist]                                                   # Add the track name and artist name formated values to the results list
+    df = pd.DataFrame(results, columns=["Artist Name"])                       # Create a pandas dataframe with the results list
+    df_to_html = df.to_html(classes='data', header="true").replace('<th>','<th style = "color:white; text-align:center">')
+    top_artists_table = [df_to_html]                                          # Convert the dataframe to an HTML table
+
+    # Get the user's 10 top tracks
+    results = []
+    curGroup = sp.current_user_top_tracks(limit=10)['items']                  # Get the next 50 tracks
+    for idx, item in enumerate(curGroup):                                     # Iterate through the retrieved tracks (50 tracks total in curGroup)
+        track = item['name']                                                  # Get the track from the item
+        results += [track]                                                    # Add the track name and artist name formated values to the results list
+    df = pd.DataFrame(results, columns=["Song Name"])                         # Create a pandas dataframe with the results list
+    df_to_html = df.to_html(classes='data', header="true").replace('<th>','<th style = "color:white; text-align:center">')
+    top_tracks_table = [df_to_html]                                           # Convert the dataframe to an HTML table
+
+    return render_template('myaccount.html', recent_tracks_table=recent_tracks_table, top_artists_table=top_artists_table, top_tracks_table=top_tracks_table)
 
 
 @app.route('/mytracks')
@@ -177,7 +210,7 @@ def create_spotify_oauth():
             client_id="9755ec99cb86450bb04ecd1a6547647a",
             client_secret="620e0bc86c0846929c83d61ec1fd92df", 
             redirect_uri=url_for('authorize', _external=True),
-            scope="user-library-read user-top-read user-read-recently-played")
+            scope="user-library-read user-read-recently-played user-read-private user-top-read user-read-currently-playing")
 
 if __name__ == '__main__':
     app.run(debug=True)

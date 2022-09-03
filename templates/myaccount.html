@@ -1,17 +1,18 @@
 {% extends 'layout.html' %}
 
 {% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='style/tables.css') }}">
 {% endblock %}
 
 {% block body %}
 
 {% with messages = get_flashed_messages(with_categories=true) %}
-    {% for category, message in messages %}
-        {% if category == 'good-signin' %}
-            <div class="alert alert-success" style="color:black; background-color:rgb(29,185,84);">{{message}}&nbsp;<i
-                        class="fa-regular fa-thumbs-up" style="color:black"></i></div>
-        {% endif %}
-    {% endfor %}
+{% for category, message in messages %}
+{% if category == 'good-signin' %}
+<div class="alert alert-success" style="color:black; background-color:rgb(29,185,84);">{{message}}&nbsp;<i
+        class="fa-regular fa-thumbs-up" style="color:black"></i></div>
+{% endif %}
+{% endfor %}
 {% endwith %}
 
 <div class="container">
@@ -31,42 +32,62 @@
     </div>
     <br><br>
 
-    <!-- Begin Recently Played Tracks Section -->
-    <div class="container">
-        <div class="row" style="text-align:left">
-            <div class="col-md-12">
-                <h1 style="font-size:large; color:rgb(29,185,84);"><b>Your Recently Played Tracks</b></h1><br>
-                <p style="font-size:smaller; color:white">Thank you for taking the time to sign in and for visiting
-                    Spotify Visualized.</p>
-                <br>
-            </div>
-        </div>
-    </div>
-    <br><br>
-
     <!-- Begin Top Artist Section -->
     <!-- current_user_top_artists(limit=20, offset=0, time_range='medium_term') -->
     <div class="container">
         <div class="row" style="text-align:left">
             <div class="col-md-12">
                 <h1 style="font-size:large; color:rgb(29,185,84);"><b>Your Top Artists</b></h1><br>
-                <p style="font-size:smaller; color:white">Thank you for taking the time to sign in and for visiting
-                    Spotify Visualized.</p>
                 <br>
+                {% if top_artists_table %}
+                {% for table in top_artists_table %}
+                {{ table|safe }}
+                {% endfor %}
+                {% else %}
+                <p style="font-size:smaller; color:white">You do not have any top artists.</p>
+                {% endif %}
             </div>
         </div>
     </div>
-    <br><br>
+    <br>
+    <hr style="width:100%;text-align:left;margin-left:0">
+    <br>
 
-    <!-- Begin Top Tracks Section -->
+    <!-- Begin Top Tracks Section  --> 
     <!-- current_user_top_tracks(limit=20, offset=0, time_range='medium_term') -->
     <div class="container">
         <div class="row" style="text-align:left">
             <div class="col-md-12">
                 <h1 style="font-size:large; color:rgb(29,185,84);"><b>Your Top Tracks</b></h1><br>
-                <p style="font-size:smaller; color:white">Thank you for taking the time to sign in and for visiting
-                    Spotify Visualized.</p>
                 <br>
+                {% if top_tracks_table %}
+                {% for table in top_tracks_table %}
+                {{ table|safe }}
+                {% endfor %}
+                {% else %}
+                <p style="font-size:smaller; color:white">You do not have any top tracks.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <br>
+    <hr style="width:100%;text-align:left;margin-left:0">
+    <br>
+
+    <!-- Begin Recently Played Tracks Section -->
+    <div class="container">
+        <div class="row" style="text-align:left">
+            <div class="col-md-12">
+                <h1 style="font-size:large; color:rgb(29,185,84);"><b>Your Recently Played Tracks</b></h1><br>
+                <br>
+                {% if recent_tracks_table %}
+                {% for table in recent_tracks_table %}
+                {{ table|safe }}
+                {% endfor %}
+                {% else %}
+                <p style="font-size:smaller; color:white">You have not played any tracks recently.</p>
+                {% endif %}
+
             </div>
         </div>
     </div>
