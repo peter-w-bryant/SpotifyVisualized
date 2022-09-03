@@ -55,6 +55,10 @@ def authorize():
     token_info = sp_oauth.get_access_token(code) # Get the access token from the authorization code
     session["token_info"] = token_info           # Store the token information in the session cookie
     session["signed_in"] = True                  # Set the signed in boolean to True
+    sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))
+    profile_info = sp.current_user()
+    session["username"] = profile_info['display_name']
+    session["profile_picture"] = profile_info['images'][0]['url']
     return redirect(url_for('myaccount'))       # Redirect the user to the get tracks page
 
 
@@ -102,16 +106,12 @@ GET TRACKS: Endpoint for getting the user's saved tracks. This will get the user
 """
 @app.route('/myaccount')
 def myaccount():
-    msg = "You have successfully signed in with your Spotify credentials!"
-    sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))
-    profile_info = sp.current_user()
-    display_name = profile_info['display_name']
-    profile_image_url = profile_info['images'][0]['url']
-    print("TEST")
-    print(profile_info)
-    print(profile_image_url)
-    print(display_name)
-    return render_template('myaccount.html', msg=msg, display_name=display_name, profile_image_url=profile_image_url)
+    msg = "You have successfully signed in as {}!".format(session.get('username'))
+    # sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))
+    # profile_info = sp.current_user()
+    # display_name = profile_info['display_name']
+    # profile_image_url = profile_info['images'][0]['url']
+    return render_template('myaccount.html', msg=msg)
 
 
 @app.route('/mytracks')
