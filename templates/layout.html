@@ -1,0 +1,54 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Spotify Visualized</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/style/show.css">
+    <link rel="icon" href="/static/images/cloud-icon.png" type="image/png" size="16x16">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//cdn.ckeditor.com/4.6.2/basic/ckeditor.js"></script>
+    
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='style/footer.css') }}">
+
+    <script type="text/javascript">
+        CKEDITOR.replace('editor')
+    </script>
+    {% block head %}{% endblock %}
+
+
+</head>
+
+<body style="background-color:rgb(0,0,0)">
+    {% include 'includes/_navbar.html'%}
+    {% include 'includes/_messages.html' %}
+    
+    {% block body %}{% endblock %}
+
+
+   
+
+    <!-- Create a centered footer -->
+    <div>
+        <footer>
+            <div class="container">
+                <div class="content has-text-centered">
+                    <p>
+                        <span style="color:rgb(29,185,84); font-weight: bold; ">Spotify Visualized</span></u> by Peter Bryant &nbsp;<i
+                            class="fa-brands fa-spotify" style="color:rgb(29,185,84)"></i>
+                    </p>
+                    <p style="font-size:xx-small; color:grey; font-style:italic"> Built with Flask and Spotipy. </p> <br>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+
+
+</body>
+
+</html>

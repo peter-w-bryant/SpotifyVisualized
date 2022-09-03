@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='style/scroll.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row" style="text-align:center">
+        <div class="col-md-12">
+            <h1 class="text-center" style="font-size:large; color:rgb(29,185,84);"><b>Welcome to Spotify
+                    Visualized!</b>&nbsp;</h1><br>
+            <p style="font-size:small; color:white">A web-application for visualizing your Spotify listening trends and
+                history.</p>
+            <br>
+
+            <div style="text-align:center">
+                <div>
+                    <a href="/login" class="btn btn-success btn-md" style="background-color:rgb(29,185,84);"
+                        role="button" aria-pressed="true"><b>Log in with Spotify</b></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+
+    <div id="container">
+
+        <!-- Each image is 350px by 233px -->
+        <div class="photobanner">
+            <img class="first" src="static/images/rks.jpg"/>
+            <img src="static/images/redhot.jpg" alt="" />
+            <img src="static/images/abba.jpg" alt="" />
+            <img src="static/images/glass_animals.png" alt="" />
+            <img src="static/images/harryStyles.jpg" alt="" />
+            <img src="static/images/cudi.jpg" alt="" />
+            <img src="static\images\blackeyedpeas.png" alt="" />
+            <img src="static\images\tame.png" alt="" />
+            <img src="static\images\frank.jpeg" alt="" />
+            <img src="static\images\kanye.jpg" alt="" />
+            <img src="static\images\mattmaeson.jpg" alt="" />
+            <img src="static\images\skrillex.png" alt="" />
+            <img src="static\images\drake.jpg" alt="" />
+            <img src="static\images\travis.jpg" alt="" />
+            <img src="static\images\rocky.jpg" alt="" />
+            <img src="static\images\rihanna.png" alt="" />
+            <img src="static\images\jcole.jpg" alt="" />
+        </div>
+    </div>
+
+    {% endblock %}

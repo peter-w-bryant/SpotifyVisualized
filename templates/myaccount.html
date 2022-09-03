@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+{% block head %}{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row" style="text-align:center">
+        <div class="col-md-12">
+            <h1 class="text-center" style="font-size:large; color:rgb(29,185,84);"><b>Welcome to your account page, {{display_name}}!</b>&nbsp;  <img src="{{profile_image_url}}" alt="Profile Image" style="width:75px;height:auto;"></h1><br>
+            <!-- Insert image from profile_image_url -->
+           
+            <p style="font-size:small; color:white">Thank you for taking the time to sign in and for visiting Spotify Visualized.</p>
+            <br>
+        </div>
+    </div>
+
+{% endblock %}

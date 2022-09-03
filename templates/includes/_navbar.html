@@ -1,0 +1,23 @@
+<nav class="navbar navbar-default" style="background-color:rgb(0,0,0); border-color:black">
+  <div class="container">
+    <div class="navbar-header">
+      <!-- Insert a stormcloud with lightning bolt emoji -->
+      <a class="navbar-brand" style="color:rgb(29,185,84);" href="#">Spotify Visualized &nbsp;<i
+          class="fa-brands fa-spotify" style="color:rgb(29,185,84)"></i>
+    </div>
+    <div id="navbar" class="collapse navbar-collapse">
+      <ul class="nav navbar-nav">
+        <li><a style="color:rgb(29,185,84)" href="/">Home</a></li>
+        {% if session.signed_in %}
+        <li><a style="color:rgb(29,185,84)" href="/myaccount">My Account</a></li>
+        <li><a style="color:rgb(29,185,84)" href="/mytracks">My Tracks</a></li>
+        <li><a style="color:rgb(29,185,84)" href="/logout">Logout</a></li>
+
+        {% else %}
+          <li><a style="color:rgb(29,185,84)" href="/login">Login</a></li>
+        {% endif %}
+      </ul>
+    </div>
+    <!--/.nav-collapse -->
+  </div>
+</nav>
