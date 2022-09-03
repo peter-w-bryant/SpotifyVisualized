@@ -1,6 +1,7 @@
 from flask import Flask, request, url_for, render_template, redirect, session, flash
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
+import spotipy.util as util
 import time
 import pandas as pd
 
@@ -108,6 +109,10 @@ GET TRACKS: Endpoint for getting the user's saved tracks. This will get the user
 """
 @app.route('/myaccount')
 def myaccount():
+    scope = 'user-read-recently-played'
+    username = session.get('username')
+    # token = util.prompt_for_user_token(username, scope, client_id="9755ec99cb86450bb04ecd1a6547647a",  client_secret="620e0bc86c0846929c83d61ec1fd92df", redirect_uri=url_for('authorize', _external=True),)
+        
     return render_template('myaccount.html')
 
 
@@ -172,7 +177,7 @@ def create_spotify_oauth():
             client_id="9755ec99cb86450bb04ecd1a6547647a",
             client_secret="620e0bc86c0846929c83d61ec1fd92df", 
             redirect_uri=url_for('authorize', _external=True),
-            scope="user-library-read")
+            scope="user-library-read user-top-read user-read-recently-played")
 
 if __name__ == '__main__':
     app.run(debug=True)
