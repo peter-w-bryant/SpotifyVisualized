@@ -6,12 +6,58 @@
 <div class="container">
     <div class="row" style="text-align:center">
         <div class="col-md-12">
-            <h1 class="text-center" style="font-size:large; color:rgb(29,185,84);"><b>Welcome to your account page, {{session.username}}!</b>&nbsp;  <img src="{{session.profile_picture}}" alt="Profile Image" style="width:75px;height:auto;"></h1><br>
-            <!-- Insert image from profile_image_url -->
-           
-            <p style="font-size:small; color:white">Thank you for taking the time to sign in and for visiting Spotify Visualized.</p>
+            <h1 class="text-center" style="font-size:x-large; color:rgb(29,185,84);"><b><u>Welcome to your account page,
+                        {{session.username}}!</u></b>&nbsp;&nbsp; <img src="{{session.profile_picture}}"
+                    alt="Profile Image" style="width:75px;height:auto;"></h1>
+            <p style="font-size:smaller; font-style:italic; color:white">Thank you for taking the time to sign in and
+                for visiting Spotify
+                Visualized.</p>
             <br>
+            <hr style="width:100%;text-align:left;margin-left:0">
+            <h2 style="font-size:medium; color:rgb(29,185,84);"><b>Your account at a glimpse...&nbsp;</b><img src="static\images\greeneye.png" alt="" style="width:50px; height:auto"/></h2>
         </div>
     </div>
+    <br><br>
 
-{% endblock %}
+    <!-- Begin Recently Played Tracks Section -->
+    <div class="container">
+        <div class="row" style="text-align:left">
+            <div class="col-md-12">
+                <h1 style="font-size:large; color:rgb(29,185,84);"><b>Your Recently Played Tracks</b></h1><br>
+                <p style="font-size:smaller; color:white">Thank you for taking the time to sign in and for visiting
+                    Spotify Visualized.</p>
+                <br>
+            </div>
+        </div>
+    </div>
+    <br><br>
+
+    <!-- Begin Top Artist Section -->
+    <!-- current_user_top_artists(limit=20, offset=0, time_range='medium_term') -->
+    <div class="container">
+        <div class="row" style="text-align:left">
+            <div class="col-md-12">
+                <h1 style="font-size:large; color:rgb(29,185,84);"><b>Your Top Artists</b></h1><br>
+                <p style="font-size:smaller; color:white">Thank you for taking the time to sign in and for visiting
+                    Spotify Visualized.</p>
+                <br>
+            </div>
+        </div>
+    </div>
+    <br><br>
+
+    <!-- Begin Top Tracks Section -->
+    <!-- current_user_top_tracks(limit=20, offset=0, time_range='medium_term') -->
+    <div class="container">
+        <div class="row" style="text-align:left">
+            <div class="col-md-12">
+                <h1 style="font-size:large; color:rgb(29,185,84);"><b>Your Top Tracks</b></h1><br>
+                <p style="font-size:smaller; color:white">Thank you for taking the time to sign in and for visiting
+                    Spotify Visualized.</p>
+                <br>
+            </div>
+        </div>
+    </div>
+    <br><br>
+
+    {% endblock %}

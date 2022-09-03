@@ -107,10 +107,6 @@ GET TRACKS: Endpoint for getting the user's saved tracks. This will get the user
 @app.route('/myaccount')
 def myaccount():
     msg = "You have successfully signed in as {}!".format(session.get('username'))
-    # sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))
-    # profile_info = sp.current_user()
-    # display_name = profile_info['display_name']
-    # profile_image_url = profile_info['images'][0]['url']
     return render_template('myaccount.html', msg=msg)
 
 
