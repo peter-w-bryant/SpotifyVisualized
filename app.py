@@ -4,12 +4,14 @@ from spotipy.oauth2 import SpotifyOAuth
 import spotipy.util as util
 import time
 import pandas as pd
+from os import urandom
+
 
 from spotify_client import *
 
 
 app = Flask(__name__)
-app.secret_key = 'super_secret_key'                         # Key used to sign session cookies
+app.secret_key = urandom(64)                        # Key used to sign session cookies
 
 # A session cookie is used to store data about the user's session.
 # This cookie is signed with the secret key, so that it can't be tampered with.
@@ -21,11 +23,6 @@ app.config['SESSION_COOKIE_NAME'] = 'spotify-login-session' # Name of session co
 TOKEN_INFO = 'token_info'     # TOKEN_INFO is a key in the session dictionary that stores the token information. It will contain the access token, refresh token,
                               # expiration time, and token type. The token information is stored in a dictionary.
  
-app = Flask(__name__) # Instantiate the flask app
- 
-app.secret_key = 'not-so-secret-key'
-app.config['SESSION_COOKIE_NAME'] = 'spotify-login-session'
-
 """
 HOME/INDEX PAGE: This page will welcome the user and prompt them to authorize Spotify to allow us to access their data.
 """
@@ -48,21 +45,31 @@ def login():
 AUTHORIZE: Endpoint is where the user will be redirected to after they have logged in with Spotify. Now that the user has authorized the app,
 we can get the access token from the authorization code and store it in the session. We will then redirect the user to the get tracks page.
 """
+
+# shellydey7
+# ShellyDey7star
 @app.route('/authorize')
 def authorize():
-    sp_oauth = create_spotify_oauth()            # Create a SpotifyOAuth object
-    session.clear()                              # Clear the session data
-    code = request.args.get('code')              # Get the authorization code from the request
-    token_info = sp_oauth.get_access_token(code) # Get the access token from the authorization code
-    session["token_info"] = token_info           # Store the token information in the session cookie
-    session["signed_in"] = True                  # Set the signed in boolean to True
-    sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))
-    profile_info = sp.current_user()
-    session["username"] = profile_info['display_name']
-    session["profile_picture"] = profile_info['images'][0]['url']
-    msg = "You have successfully signed in as {}!".format(session.get('username'))
+    # Authentication flow is off, we are spotify OAuth token no way to specify the user. 
+
+    session.clear()                                    # Clear the session
+    sp_oauth = create_spotify_oauth()                  # Create a SpotifyOAuth object
+    code = request.args.get('code')                    # Get the authorization code from the request
+    token_info = sp_oauth.get_access_token(code)       # Get the access token from the authorization code
+    session[TOKEN_INFO] = token_info                   # Store the token information in the session cookie
+    session["signed_in"] = True                        # Set the signed in boolean to True
+    # Access user name data from access token
+    token = token_info['access_token']
+    print(type(token))
+    sp = spotipy.Spotify(auth=token)
+    user = sp.current_user()
+    print(user)
+
+
+    sp = spotipy.client.Spotify(auth=token_info.get('access_token'))  # Create a Spotify client using the access token
+    msg = "You have successfully signed in as {}!".format(sp.current_user()['display_name'])
     flash(msg, 'good-signin')
-    return redirect(url_for('myaccount'))       # Redirect the user to the get tracks page
+    return redirect(url_for('myaccount'))              # Redirect the user to the get tracks page
 
 
 """
@@ -165,16 +172,18 @@ def myaccount():
     df['Spotify Popularity*'] = track_play_counts
     df_to_html = df.to_html(classes='data', header="true").replace('<th>','<th style = "color:white; text-align:center">')
     top_tracks_table = [df_to_html]                                           # Convert the dataframe to an HTML table
-    return render_template('myaccount.html', recent_tracks_table=recent_tracks_table, recent_track_images_urls=recent_track_images_urls, top_artists_table=top_artists_table, artist_image_urls=artist_image_urls ,top_tracks_table=top_tracks_table, album_images_urls=album_images_urls)
+        # session["profile_picture"] = profile_info['images'][0]['url']
+
+    return render_template('myaccount.html', recent_tracks_table=recent_tracks_table, recent_track_images_urls=recent_track_images_urls, top_artists_table=top_artists_table, artist_image_urls=artist_image_urls ,top_tracks_table=top_tracks_table, album_images_urls=album_images_urls, username=sp.current_user()['display_name'], profile_image_url=sp.current_user()['images'][0]['url'] )
 
 
 @app.route('/mytracks')
 def mytracks():
-    session['token_info'], token_authorized = get_token()                     # Get the token information from the session cookie by calling the get_token function below
+    session[TOKEN_INFO], token_authorized = get_token()                     # Get the token information from the session cookie by calling the get_token function below
     session.modified = True                                                   # Indicate that the session data has been modified
     if not token_authorized:                                                  # If the token is not valid
         return redirect('/')                                                  # Redirect the user to the index page
-    sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))  # Create a Spotify object using the access token stored in the session
+    sp = spotipy.Spotify(auth=session.get(TOKEN_INFO).get('access_token'))  # Create a Spotify object using the access token stored in the session
     results = []
     iter = 0
     # Iterate through the user's saved tracks
@@ -200,21 +209,21 @@ indicating if the token is valid.
 """
 def get_token():
     token_valid = False                                      # Boolean to indicate if the token is valid (i.e. not expired)
-    token_info = session.get("token_info", {})               # Get the token information from the session cookie
+    token_info = session.get(TOKEN_INFO, {})               # Get the token information from the session cookie
 
     # Checking if the session already has a token stored
-    if not (session.get('token_info', False)):               # If there is no token in the session
+    if not (session.get(TOKEN_INFO, False)):               # If there is no token in the session
         token_valid = False                                  # Set the token valid boolean to False
         return token_info, token_valid                       # Return the token information and the token valid boolean
 
     # Checking if token has expired
     now = int(time.time())                                                      # Get the current time
-    is_token_expired = session.get('token_info').get('expires_at') - now < 60   # Check if the token will expire within the next 60 seconds 
+    is_token_expired = session.get(TOKEN_INFO).get('expires_at') - now < 60   # Check if the token will expire within the next 60 seconds 
                                                                                 # is_token_expired will be True if the token will expired, and false otherwise
     # Refreshing token if it has expired
     if (is_token_expired):                                                                          # If the token has expired                                            
         sp_oauth = create_spotify_oauth()                                                           # Create a SpotifyOAuth object                     
-        token_info = sp_oauth.refresh_access_token(session.get('token_info').get('refresh_token'))  # Refresh the access token by passing the refresh token stored in the session
+        token_info = sp_oauth.refresh_access_token(session.get(TOKEN_INFO).get('refresh_token'))  # Refresh the access token by passing the refresh token stored in the session
 
     # Return the token information and a boolean indicating if the token is valid
     token_valid = True                  # Set the token valid boolean to True 
