@@ -115,38 +115,57 @@ def myaccount():
         return redirect('/')                                                  # Redirect the user to the index page
     sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))  # Create a Spotify object using the access token stored in the session
 
-    # Get the user's 20 most recently played tracks
+    # Get the user's 15 most recently played tracks and their images
     results = []
-    curGroup = sp.current_user_recently_played(limit=20)['items']             # Get the next 50 tracks
+    recent_track_images_urls = []
+    curGroup = sp.current_user_recently_played(limit=15)['items']             # Get the next 50 tracks
     for idx, item in enumerate(curGroup):                                     # Iterate through the retrieved tracks (50 tracks total in curGroup)
         track = item['track']                                                 # Get the track from the item
         val = track['name'] + " - " + track['artists'][0]['name']             # Get the track name and artist name, format: "Track Name - Artist Name"
         results += [val]                                                      # Add the track name and artist name formated values to the results list
+        recent_track_images_urls += [track['album']['images'][0]['url']]      # Add the track's image url to the list of track image urls
     df = pd.DataFrame(results, columns=["Song Name"])                         # Create a pandas dataframe with the results list
     df_to_html = df.to_html(classes='data', header="true").replace('<th>','<th style = "color:white; text-align:center">')
     recent_tracks_table = [df_to_html]                                        # Convert the dataframe to an HTML table
 
-    # Get the user's 10 top artists
+    # Get the user's 15 top artists and their images 
     results = []
-    curGroup = sp.current_user_top_artists(limit=10)['items']                 # Get the next 50 tracks
+    artist_image_urls = []
+    genre = []
+    artist_popularity = []
+    curGroup = sp.current_user_top_artists(limit=15)['items']                 # Get the next 50 tracks
     for idx, item in enumerate(curGroup):                                     # Iterate through the retrieved tracks (50 tracks total in curGroup)
         artist = item['name']                                                 # Get the track from the item
         results += [artist]                                                   # Add the track name and artist name formated values to the results list
+        artist_image_urls += [item['images'][0]['url']]
+        genre += [item['genres']]
+        artist_popularity += [item['popularity']]
     df = pd.DataFrame(results, columns=["Artist Name"])                       # Create a pandas dataframe with the results list
+    # Convert the list of genres to a string
+    genre = [', '.join(map(str, l)) for l in genre]                          # Convert the list of genres to a string
+    df['Genre'] = genre
+    df['Spotify Popularity*'] = artist_popularity
     df_to_html = df.to_html(classes='data', header="true").replace('<th>','<th style = "color:white; text-align:center">')
     top_artists_table = [df_to_html]                                          # Convert the dataframe to an HTML table
 
-    # Get the user's 10 top tracks
+    # Get the user's 15 top tracks, their images, their artists, the number of streams
     results = []
-    curGroup = sp.current_user_top_tracks(limit=10)['items']                  # Get the next 50 tracks
+    album_images_urls = []
+    artists = []
+    track_play_counts = []
+    curGroup = sp.current_user_top_tracks(limit=15)['items']                  # Get the next 50 tracks
     for idx, item in enumerate(curGroup):                                     # Iterate through the retrieved tracks (50 tracks total in curGroup)
         track = item['name']                                                  # Get the track from the item
         results += [track]                                                    # Add the track name and artist name formated values to the results list
+        album_images_urls += [item['album']['images'][0]['url']]
+        artists += [item['artists'][0]['name']]
+        track_play_counts += [item['popularity']]
     df = pd.DataFrame(results, columns=["Song Name"])                         # Create a pandas dataframe with the results list
+    df['Artist'] = artists
+    df['Spotify Popularity*'] = track_play_counts
     df_to_html = df.to_html(classes='data', header="true").replace('<th>','<th style = "color:white; text-align:center">')
     top_tracks_table = [df_to_html]                                           # Convert the dataframe to an HTML table
-
-    return render_template('myaccount.html', recent_tracks_table=recent_tracks_table, top_artists_table=top_artists_table, top_tracks_table=top_tracks_table)
+    return render_template('myaccount.html', recent_tracks_table=recent_tracks_table, recent_track_images_urls=recent_track_images_urls, top_artists_table=top_artists_table, artist_image_urls=artist_image_urls ,top_tracks_table=top_tracks_table, album_images_urls=album_images_urls)
 
 
 @app.route('/mytracks')

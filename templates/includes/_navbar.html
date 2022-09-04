@@ -2,16 +2,16 @@
   <div class="container">
     <div class="navbar-header">
       <!-- Insert a stormcloud with lightning bolt emoji -->
-      <a class="navbar-brand" style="color:rgb(29,185,84);" href="#">Spotify Visualized &nbsp;<i
+      <a class="navbar-brand" style="color:rgb(29,185,84);" href="#"><b>Spotify Visualized </b>&nbsp;<i
           class="fa-brands fa-spotify" style="color:rgb(29,185,84)"></i>
     </div>
     <div id="navbar" class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-        <li><a style="color:rgb(29,185,84)" href="/">Home</a></li>
+        <li><a style="color:rgb(29,185,84); font-weight: bold; " href="/">Home</a></li>
         {% if session.signed_in %}
-        <li><a style="color:rgb(29,185,84)" href="/myaccount">My Account</a></li>
-        <li><a style="color:rgb(29,185,84)" href="/mytracks">My Tracks</a></li>
-        <li><a style="color:rgb(29,185,84)" href="/logout">Logout</a></li>
+        <li><a style="color:rgb(29,185,84);font-weight: bold; " href="/myaccount">My Account</a></li>
+        <li><a style="color:rgb(29,185,84);font-weight: bold; " href="/mytracks">My Tracks</a></li>
+        <li><a style="color:rgb(29,185,84);font-weight: bold; " href="/logout">Logout</a></li>
 
         {% else %}
           <li><a style="color:rgb(29,185,84)" href="/login">Login</a></li>
