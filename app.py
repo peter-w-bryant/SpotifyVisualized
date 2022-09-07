@@ -121,7 +121,7 @@ def myaccount():
     # Get the user's 15 most recently played tracks and their images
     results = []
     recent_track_images_urls = []
-    curGroup = sp.current_user_recently_played(limit=15)['items']             # Get the next 50 tracks
+    curGroup = sp.current_user_recently_played(limit=15)['items']             # Get the next 15 tracks
     for idx, item in enumerate(curGroup):                                     # Iterate through the retrieved tracks (50 tracks total in curGroup)
         track = item['track']                                                 # Get the track from the item
         val = track['name'] + " - " + track['artists'][0]['name']             # Get the track name and artist name, format: "Track Name - Artist Name"
@@ -136,7 +136,7 @@ def myaccount():
     artist_image_urls = []
     genre = []
     artist_popularity = []
-    curGroup = sp.current_user_top_artists(limit=15)['items']                 # Get the next 50 tracks
+    curGroup = sp.current_user_top_artists(limit=15)['items']                 # Get the next 15 tracks
     for idx, item in enumerate(curGroup):                                     # Iterate through the retrieved tracks (50 tracks total in curGroup)
         artist = item['name']                                                 # Get the track from the item
         results += [artist]                                                   # Add the track name and artist name formated values to the results list
@@ -156,7 +156,7 @@ def myaccount():
     album_images_urls = []
     artists = []
     track_play_counts = []
-    curGroup = sp.current_user_top_tracks(limit=15)['items']                  # Get the next 50 tracks
+    curGroup = sp.current_user_top_tracks(limit=15)['items']                  # Get the next 15 tracks
     for idx, item in enumerate(curGroup):                                     # Iterate through the retrieved tracks (50 tracks total in curGroup)
         track = item['name']                                                  # Get the track from the item
         results += [track]                                                    # Add the track name and artist name formated values to the results list
