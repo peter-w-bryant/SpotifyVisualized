@@ -60,12 +60,8 @@ def authorize():
     session["signed_in"] = True                        # Set the signed in boolean to True
     # Access user name data from access token
     token = token_info['access_token']
-    print(type(token))
     sp = spotipy.Spotify(auth=token)
     user = sp.current_user()
-    print(user)
-
-
     sp = spotipy.client.Spotify(auth=token_info.get('access_token'))  # Create a Spotify client using the access token
     msg = "You have successfully signed in as {}!".format(sp.current_user()['display_name'])
     flash(msg, 'good-signin')
@@ -172,15 +168,27 @@ def myaccount():
     df['Spotify Popularity*'] = track_play_counts
     df_to_html = df.to_html(classes='data', header="true").replace('<th>','<th style = "color:white; text-align:center">')
     top_tracks_table = [df_to_html]                                           # Convert the dataframe to an HTML table
-        # session["profile_picture"] = profile_info['images'][0]['url']
 
-    return render_template('myaccount.html', recent_tracks_table=recent_tracks_table, recent_track_images_urls=recent_track_images_urls, top_artists_table=top_artists_table, artist_image_urls=artist_image_urls ,top_tracks_table=top_tracks_table, album_images_urls=album_images_urls, username=sp.current_user()['display_name'], profile_image_url=sp.current_user()['images'][0]['url'] )
+    # Get the currently playing track from the current user
+    results = []
+    # curSong = sp.current_user_playing_track()
+    # Access the name of the current song
+    curSong = sp.current_user_playing_track()['item']['name']
+    print("Current song album: ", sp.current_user_playing_track()['item']['album']['name'])
+    album_name = sp.current_user_playing_track()['item']['album']['name']
+    print("Current Song: ", curSong)
+    album_image_url = sp.current_user_playing_track()['item']['album']['images'][0]['url']
+    cur_song_info_array = [curSong, album_name, album_image_url]
+    print("Song info array:", cur_song_info_array)
+    
+
+    return render_template('myaccount.html', cur_song_info_array=cur_song_info_array, current_recent_tracks_table=recent_tracks_table, recent_track_images_urls=recent_track_images_urls, top_artists_table=top_artists_table, artist_image_urls=artist_image_urls ,top_tracks_table=top_tracks_table, album_images_urls=album_images_urls, username=sp.current_user()['display_name'], profile_image_url=sp.current_user()['images'][0]['url'] )
 
 
 @app.route('/mytracks')
 def mytracks():
     session[TOKEN_INFO], token_authorized = get_token()                     # Get the token information from the session cookie by calling the get_token function below
-    session.modified = True                                                   # Indicate that the session data has been modified
+    session.modified = True                                                   # Indicdate that the session data has been modified
     if not token_authorized:                                                  # If the token is not valid
         return redirect('/')                                                  # Redirect the user to the index page
     sp = spotipy.Spotify(auth=session.get(TOKEN_INFO).get('access_token'))  # Create a Spotify object using the access token stored in the session

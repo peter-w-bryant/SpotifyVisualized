@@ -21,8 +21,8 @@
     <div class="row" style="text-align:center">
         <div class="col-md-12">
             <h1 class="text-center" style="font-size:x-large; color:rgb(29,185,84);"><b><u>Welcome to your account page,
-                        {{username}}!</u></b>&nbsp;&nbsp; <img src="{{profile_image_url}}"
-                    alt="Profile Image" style="width:75px;height:auto;"></h1>
+                        {{username}}!</u></b>&nbsp;&nbsp; <img src="{{profile_image_url}}" alt="Profile Image"
+                    style="width:75px;height:auto;"></h1>
             <p style="font-size:smaller; font-style:italic; color:white">Thank you for taking the time to sign in and
                 for visiting Spotify
                 Visualized.</p>
@@ -32,6 +32,36 @@
         </div>
     </div>
     <hr style="width:100%;text-align:left;margin-left:0;background-color:grey">
+    <br>
+    <!-- Begin Top Artist Section -->
+    <div class="container">
+        <div class="row" style="text-align:left">
+            <div class="col-md-12">
+                {% if cur_song_info_array %}
+                <h1 style="font-size:large; color:rgb(29,185,84);"><b>Currently Playing</b></h1><br>
+                <div>
+                    <div style="color:white">
+                        <table>
+                            <tr >
+                                <th style="color:white; text-align:center">Song Title</th>
+                                <th style="color:white; text-align:center"> Album Title</th>
+                            </tr>
+                            <tr>
+                            <td>{{cur_song_info_array[0]}}</td>
+                            <td>{{cur_song_info_array[1]}}</td>
+                            <img style="text-align:center; width:200px; height:auto; display: block; margin-left: auto; margin-right: auto;"
+                                src="{{cur_song_info_array[2]}}" />
+                            </tr>
+                            <br>
+                        </table>
+                    </div>
+                </div>
+                {% else %}
+                <p style="font-size:smaller; color:white">You do not have any top artists.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
     <br>
 
     <!-- Begin Top Artist Section -->
@@ -106,7 +136,7 @@
             <div class="col-md-12">
                 <h1 style="font-size:large; color:rgb(29,185,84);"><b>Your Recently Played Tracks</b></h1><br>
                 <br>
-                {% if recent_tracks_table %}
+                {% if current_recent_tracks_table %}
                 <div id="container">
                     <div class="photobanner">
                         <img class="first" src="{{recent_track_images_urls[0]}}" />
@@ -115,7 +145,7 @@
                         {% endfor %}
                     </div>
                 </div>
-                {% for table in recent_tracks_table %}
+                {% for table in current_recent_tracks_table %}
                 {{ table|safe }}
                 {% endfor %}
                 {% else %}
