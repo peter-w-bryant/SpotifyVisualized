@@ -108,7 +108,7 @@ def get_all_tracks():
     return "done"                                       # Return "done" to indicate that the function has finished
 
 """
-GET TRACKS: Endpoint for getting the user's saved tracks. This will get the user's saved tracks and display them in a table.
+My Account: Endpoint for getting a sample of a user's listening history. This will get the user's listening history and display it in a tables.
 """
 @app.route('/myaccount')
 def myaccount():
@@ -173,18 +173,22 @@ def myaccount():
     results = []
     # curSong = sp.current_user_playing_track()
     # Access the name of the current song
-    curSong = sp.current_user_playing_track()['item']['name']
-    print("Current song album: ", sp.current_user_playing_track()['item']['album']['name'])
-    album_name = sp.current_user_playing_track()['item']['album']['name']
-    print("Current Song: ", curSong)
-    album_image_url = sp.current_user_playing_track()['item']['album']['images'][0]['url']
-    cur_song_info_array = [curSong, album_name, album_image_url]
-    print("Song info array:", cur_song_info_array)
+    curSong = False
+    album_name = False
+    album_image_url = False
+    cur_song_info_array = False
+    if sp.current_user_playing_track() is not None:
+        curSong = sp.current_user_playing_track()['item']['name']
+        album_name = sp.current_user_playing_track()['item']['album']['name']
+        album_image_url = sp.current_user_playing_track()['item']['album']['images'][0]['url']
+        cur_song_info_array = [curSong, album_name, album_image_url]
     
 
     return render_template('myaccount.html', cur_song_info_array=cur_song_info_array, current_recent_tracks_table=recent_tracks_table, recent_track_images_urls=recent_track_images_urls, top_artists_table=top_artists_table, artist_image_urls=artist_image_urls ,top_tracks_table=top_tracks_table, album_images_urls=album_images_urls, username=sp.current_user()['display_name'], profile_image_url=sp.current_user()['images'][0]['url'] )
 
-
+"""
+GET TRACKS: Endpoint for getting the user's saved tracks. This will get the user's saved tracks and display them in a table.
+"""
 @app.route('/mytracks')
 def mytracks():
     session[TOKEN_INFO], token_authorized = get_token()                     # Get the token information from the session cookie by calling the get_token function below
