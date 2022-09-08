@@ -42,22 +42,20 @@
                 <div>
                     <div style="color:white">
                         <table>
-                            <tr >
+                            <tr>
                                 <th style="color:white; text-align:center">Song Title</th>
                                 <th style="color:white; text-align:center"> Album Title</th>
                             </tr>
                             <tr>
-                            <td>{{cur_song_info_array[0]}}</td>
-                            <td>{{cur_song_info_array[1]}}</td>
-                            <img style="text-align:center; width:200px; height:auto; display: block; margin-left: auto; margin-right: auto;"
-                                src="{{cur_song_info_array[2]}}" />
+                                <td>{{cur_song_info_array[0]}}</td>
+                                <td>{{cur_song_info_array[1]}}</td>
+                                <img style="text-align:center; width:200px; height:auto; display: block; margin-left: auto; margin-right: auto;"
+                                    src="{{cur_song_info_array[2]}}" />
                             </tr>
                             <br>
                         </table>
                     </div>
                 </div>
-                {% else %}
-                <p style="font-size:smaller; color:white">You do not have any top artists.</p>
                 {% endif %}
             </div>
         </div>

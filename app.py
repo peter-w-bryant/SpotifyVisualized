@@ -81,31 +81,31 @@ def logout():
 """
 GET TRACKS: Endpoint for getting the user's saved tracks. This will get the user's saved tracks and display them in a table.
 """
-@app.route('/getTracks')
-def get_all_tracks():
-    session['token_info'], token_authorized = get_token()                     # Get the token information from the session cookie by calling the get_token function below
-    session.modified = True                                                   # Indicate that the session data has been modified
-    if not token_authorized:                                                  # If the token is not valid
-        return redirect('/')                                                  # Redirect the user to the index page
-    sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))  # Create a Spotify object using the access token stored in the session
-    results = []
-    iter = 0
-    # Iterate through the user's saved tracks
-    while True:
-        offset = iter * 50                                                        # The offset is used to get the next 50 tracks
-        iter += 1                                                                 # Increment the iterator
-        curGroup = sp.current_user_saved_tracks(limit=50, offset=offset)['items'] # Get the next 50 tracks
-        for idx, item in enumerate(curGroup):                                     # Iterate through the retrieved tracks (50 tracks total in curGroup)
-            track = item['track']                                                 # Get the track from the item
-            val = track['name'] + " - " + track['artists'][0]['name']             # Get the track name and artist name, format: "Track Name - Artist Name"
-            results += [val]                                                      # Add the track name and artist name formated values to the results list
-        if (len(curGroup) < 50):   # If the length of the current group is less than 50, we have reached the end of the user's saved tracks
-            break                  # Break out of the while loop
+# @app.route('/recTracks')
+# def get_rec_tracks():
+#     session['token_info'], token_authorized = get_token()                     # Get the token information from the session cookie by calling the get_token function below
+#     session.modified = True                                                   # Indicate that the session data has been modified
+#     if not token_authorized:                                                  # If the token is not valid
+#         return redirect('/')                                                  # Redirect the user to the index page
+#     sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))  # Create a Spotify object using the access token stored in the session
+#     results = []
+#     iter = 0
+#     # Iterate through the user's saved tracks
+#     while True:
+#         offset = iter * 50                                                        # The offset is used to get the next 50 tracks
+#         iter += 1                                                                 # Increment the iterator
+#         curGroup = sp.current_user_saved_tracks(limit=50, offset=offset)['items'] # Get the next 50 tracks
+#         for idx, item in enumerate(curGroup):                                     # Iterate through the retrieved tracks (50 tracks total in curGroup)
+#             track = item['track']                                                 # Get the track from the item
+#             val = track['name'] + " - " + track['artists'][0]['name']             # Get the track name and artist name, format: "Track Name - Artist Name"
+#             results += [val]                                                      # Add the track name and artist name formated values to the results list
+#         if (len(curGroup) < 50):   # If the length of the current group is less than 50, we have reached the end of the user's saved tracks
+#             break                  # Break out of the while loop
     
-    # Convert the results list to a pandas dataframe so that we can display it in a table
-    df = pd.DataFrame(results, columns=["song names"])  # Create a pandas dataframe with the results list
-    df.to_csv('songs.csv', index=False)                 # Save the dataframe to a csv file
-    return "done"                                       # Return "done" to indicate that the function has finished
+#     # Convert the results list to a pandas dataframe so that we can display it in a table
+#     df = pd.DataFrame(results, columns=["song names"])  # Create a pandas dataframe with the results list
+#     df.to_csv('songs.csv', index=False)                 # Save the dataframe to a csv file
+#     return "done"                                       # Return "done" to indicate that the function has finished
 
 """
 My Account: Endpoint for getting a sample of a user's listening history. This will get the user's listening history and display it in a tables.
@@ -189,31 +189,31 @@ def myaccount():
 """
 GET TRACKS: Endpoint for getting the user's saved tracks. This will get the user's saved tracks and display them in a table.
 """
-@app.route('/mytracks')
-def mytracks():
-    session[TOKEN_INFO], token_authorized = get_token()                     # Get the token information from the session cookie by calling the get_token function below
-    session.modified = True                                                   # Indicdate that the session data has been modified
+@app.route('/recTracks')
+def get_current_rec_tracks():
+    session['token_info'], token_authorized = get_token()                     # Get the token information from the session cookie by calling the get_token function below
+    session.modified = True                                                   # Indicate that the session data has been modified
     if not token_authorized:                                                  # If the token is not valid
         return redirect('/')                                                  # Redirect the user to the index page
-    sp = spotipy.Spotify(auth=session.get(TOKEN_INFO).get('access_token'))  # Create a Spotify object using the access token stored in the session
-    results = []
-    iter = 0
-    # Iterate through the user's saved tracks
-    while True:
-        offset = iter * 50                                                         # The offset is used to get the next 50 tracks
-        iter += 1                                                                 # Increment the iterator
-        curGroup = sp.current_user_saved_tracks(limit=50, offset=offset)['items']  # Get the next 50 tracks
-        for idx, item in enumerate(curGroup):                                     # Iterate through the retrieved tracks (50 tracks total in curGroup)
-            track = item['track']                                                 # Get the track from the item
-            val = track['name'] + " - " + track['artists'][0]['name']             # Get the track name and artist name, format: "Track Name - Artist Name"
-            results += [val]                                                      # Add the track name and artist name formated values to the results list
-        if (len(curGroup) < 50):   # If the length of the current group is less than 50, we have reached the end of the user's saved tracks
-            break                 # Break out of the while loop
-    
-    # Convert the results list to a pandas dataframe so that we can display it in a table
-    df = pd.DataFrame(results, columns=["song names"])  # Create a pandas dataframe with the results list
-    table = [df.to_html(classes='data', header="true")] # Convert the dataframe to an HTML table
-    return render_template('mytracks.html', tables= table)                                       # Return "done" to indicate that the function has finished
+    sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))  # Create a Spotify object using the access token stored in the session
+    artists = []
+    curGroup = sp.current_user_top_tracks(limit=15)['items']                  # Current group of top tracks for the current user
+    for idx, item in enumerate(curGroup):
+        # artists += [item['artists'][0]['name']]
+        artists += [item['artists'][0]['id']]
+    genres = []
+    # curGroup = sp.current_user_top_genres(limit=50)['items']
+    genreSeeds = sp.recommendation_genre_seeds()
+    # for idx, item in enumerate(curGroup):
+    #     genres += [item['genres'][0]['name']]
+
+    print("Artists length: ", len(artists), " Top Artists: ", artists)
+    print("Genres length: ", len(genreSeeds), " Top Artists: ", genreSeeds)
+
+
+
+
+    return render_template('mytracks.html')                                       # Return "done" to indicate that the function has finished
 
 """
 GET_TOKEN: This function will check if the token is valid and get a new token if it has expired. It will return the token information and a boolean 
