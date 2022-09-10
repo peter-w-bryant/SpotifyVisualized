@@ -46,8 +46,7 @@ AUTHORIZE: Endpoint is where the user will be redirected to after they have logg
 we can get the access token from the authorization code and store it in the session. We will then redirect the user to the get tracks page.
 """
 
-# shellydey7
-# ShellyDey7star
+
 @app.route('/authorize')
 def authorize():
     # Authentication flow is off, we are spotify OAuth token no way to specify the user. 
@@ -199,7 +198,6 @@ def get_current_rec_tracks():
     artists = []
     curGroup = sp.current_user_top_tracks(limit=15)['items']                  # Current group of top tracks for the current user
     for idx, item in enumerate(curGroup):
-        # artists += [item['artists'][0]['name']]
         artists += [item['artists'][0]['id']]
     genres = []
     # curGroup = sp.current_user_top_genres(limit=50)['items']
