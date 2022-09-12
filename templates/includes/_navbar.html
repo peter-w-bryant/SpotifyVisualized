@@ -10,9 +10,7 @@
         <li><a style="color:rgb(29,185,84); font-weight: bold; " href="/">Home</a></li>
         {% if session.signed_in %}
         <li><a style="color:rgb(29,185,84);font-weight: bold; " href="/myaccount">My Account</a></li>
-        <li><a style="color:rgb(29,185,84);font-weight: bold; " href="/recTracks">Recommmended Tracks</a></li>
         <li><a style="color:rgb(29,185,84);font-weight: bold; " href="/logout">Logout</a></li>
-
         {% else %}
           <li><a style="color:rgb(29,185,84);font-weight: bold;" href="/login">Login</a></li>
         {% endif %}

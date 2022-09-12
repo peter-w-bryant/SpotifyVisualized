@@ -5,6 +5,7 @@ import spotipy.util as util
 import time
 import pandas as pd
 from os import urandom
+import config
 
 
 from spotify_client import *
@@ -59,8 +60,6 @@ def authorize():
     session["signed_in"] = True                        # Set the signed in boolean to True
     # Access user name data from access token
     token = token_info['access_token']
-    sp = spotipy.Spotify(auth=token)
-    user = sp.current_user()
     sp = spotipy.client.Spotify(auth=token_info.get('access_token'))  # Create a Spotify client using the access token
     msg = "You have successfully signed in as {}!".format(sp.current_user()['display_name'])
     flash(msg, 'good-signin')
@@ -76,35 +75,6 @@ def logout():
         session.pop(key)                        # Remove each key from the session dictionary
     session.clear()
     return redirect('/')                        # Redirect the user to the index page
-
-"""
-GET TRACKS: Endpoint for getting the user's saved tracks. This will get the user's saved tracks and display them in a table.
-"""
-# @app.route('/recTracks')
-# def get_rec_tracks():
-#     session['token_info'], token_authorized = get_token()                     # Get the token information from the session cookie by calling the get_token function below
-#     session.modified = True                                                   # Indicate that the session data has been modified
-#     if not token_authorized:                                                  # If the token is not valid
-#         return redirect('/')                                                  # Redirect the user to the index page
-#     sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))  # Create a Spotify object using the access token stored in the session
-#     results = []
-#     iter = 0
-#     # Iterate through the user's saved tracks
-#     while True:
-#         offset = iter * 50                                                        # The offset is used to get the next 50 tracks
-#         iter += 1                                                                 # Increment the iterator
-#         curGroup = sp.current_user_saved_tracks(limit=50, offset=offset)['items'] # Get the next 50 tracks
-#         for idx, item in enumerate(curGroup):                                     # Iterate through the retrieved tracks (50 tracks total in curGroup)
-#             track = item['track']                                                 # Get the track from the item
-#             val = track['name'] + " - " + track['artists'][0]['name']             # Get the track name and artist name, format: "Track Name - Artist Name"
-#             results += [val]                                                      # Add the track name and artist name formated values to the results list
-#         if (len(curGroup) < 50):   # If the length of the current group is less than 50, we have reached the end of the user's saved tracks
-#             break                  # Break out of the while loop
-    
-#     # Convert the results list to a pandas dataframe so that we can display it in a table
-#     df = pd.DataFrame(results, columns=["song names"])  # Create a pandas dataframe with the results list
-#     df.to_csv('songs.csv', index=False)                 # Save the dataframe to a csv file
-#     return "done"                                       # Return "done" to indicate that the function has finished
 
 """
 My Account: Endpoint for getting a sample of a user's listening history. This will get the user's listening history and display it in a tables.
@@ -245,8 +215,8 @@ In our case, we want the user-library-read scope, which allows us to read the us
 """
 def create_spotify_oauth():
     return SpotifyOAuth(
-            client_id="9755ec99cb86450bb04ecd1a6547647a",
-            client_secret="620e0bc86c0846929c83d61ec1fd92df", 
+            client_id=config.client_id,
+            client_secret=config.client_secret, 
             redirect_uri=url_for('authorize', _external=True),
             scope="user-library-read user-read-recently-played user-read-private user-top-read user-read-currently-playing")
 
